@@ -1,9 +1,10 @@
 import NextAuth from 'next-auth'
+const stateParam = 'stateParam'
 export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     {
-      id: 'saltID',
+      id: 'salt-id-provider',
       name: 'Salt ID',
       type: 'oauth',
       wellKnown:
@@ -13,18 +14,19 @@ export default NextAuth({
           scope: 'openid email',
           prompt: 'login',
           ui_locales: 'en',
-          nonce: 'dhfjkdashfkj',
+          redirect_uri:
+            'http://user-portal-curity.saltpay.local:3000/api/auth/callback/salt-id-provider',
         },
       },
       idToken: true,
-      checks: ['state'],
+      checks: 'state',
       clientId: 'auth-code-client',
       clientSecret: 'secret',
     },
   ],
-
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
+      console.log('>>> user: ', user)
       return true
     },
     async redirect({ url, baseUrl }) {
